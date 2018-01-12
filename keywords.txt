@@ -1,0 +1,36 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+PR_ButtonClass		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+isPressed		KEYWORD2
+isReliased		KEYWORD2	
+isLongPressed		KEYWORD2
+isLongReliased		KEYWORD2
+isOnClick		KEYWORD2
+isOnDblClick		KEYWORD2	
+isOnFall		KEYWORD2	
+isOnRise		KEYWORD2
+isOnLongPressed		KEYWORD2
+isOnLongReliased	KEYWORD2
+getVerboseState		KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+######################################
+
+
+PR_BTN_CLICK_INTERVAL		LITERAL1
+PR_BTN_DBLCLICK_INTERVAL	LITERAL1
+PR_BTN_LONG_PRESS_INTERVAL	LITERAL1
+PR_BTN_LONG_RELIASED_INTERVAL	LITERAL1
+PR_BTN_ASYNC_MODE		LITERAL1
