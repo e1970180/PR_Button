@@ -28,6 +28,13 @@ class PR_ButtonClass {
 		bool 		isOnLongPressed();
 		bool 		isOnLongReliased();
 		
+		void		setOnClickCallback		( void (*func)(void) );
+		void		setOnDblClickCallback	( void (*func)(void) );
+		void		setOnFallCallback		( void (*func)(void) );
+		void		setOnRiseCallback		( void (*func)(void) );
+		void		setOnLongPressedCallback( void (*func)(void) );	
+		void		setOnLongReliasedCallback( void (*func)(void) );			
+		
 		uint16_t	getState()			{ return _state.value;	}
 		String		getVerboseState();	
 
@@ -83,7 +90,13 @@ class PR_ButtonClass {
 		
 		StateSM	_stateMachine = PR_RELIASED;
 		
-		
+		void 	(*_onClickCallback)(void) 			= nullptr;
+		void 	(*_onDblClickCallback)(void) 		= nullptr;
+		void 	(*_onFallCallback)(void) 			= nullptr;
+		void 	(*_onRiseCallback)(void) 			= nullptr;
+		void 	(*_onLongPressedCallback)(void) 	= nullptr;
+		void 	(*_onLongReliasedCallback)(void) 	= nullptr;
+	
 };
 		
 
@@ -152,6 +165,8 @@ void	PR_ButtonClass::loop() {
 					_state.b.longReliased = 1;
 					_state.b.onlongReliased = 1;
 					readDebounced();
+					
+					if ( _onLongReliasedCallback != nullptr) _onLongReliasedCallback();
 				}
 				{	// условия перехода в  др состояния
 					_stateMachine = PR_LONGRELIASED;
@@ -168,7 +183,10 @@ void	PR_ButtonClass::loop() {
 					_state.b.longReliased = 0;
 					_state.b.pressed = 1;
 					_state.b.onRising = 1;
-					readDebounced();		
+					readDebounced();
+					
+					if ( _onRiseCallback != nullptr) _onRiseCallback();
+					
 				}
 				{ 	// условия перехода в  др состояния
 					if ( _getDuration() < _dblClickInterval ) _stateMachine = PR_ON_DBLCLICK;
@@ -190,6 +208,9 @@ void	PR_ButtonClass::loop() {
 					_state.b.pressed = 0;
 					_state.b.onFalling = 1;
 					readDebounced();
+					
+					if ( _onFallCallback != nullptr) _onFallCallback();
+					
 				}
 				{ 	// условия перехода в  др состояния
 					if ( _getDuration() < _clickInterval ) _stateMachine = PR_ON_CLICK;
@@ -202,7 +223,10 @@ void	PR_ButtonClass::loop() {
 			case	PR_ON_LONGPRESSED: {	// 8 действия в этом состоянии
 					_state.b.longPressed = 1;
 					_state.b.onlongPressed = 1;
-					readDebounced();	
+					readDebounced();
+					
+					if ( _onLongPressedCallback != nullptr) _onLongPressedCallback();
+					
 				}
 				{	// условия перехода в  др состояния
 					_stateMachine = PR_LONGPRESSED;
@@ -219,6 +243,8 @@ void	PR_ButtonClass::loop() {
 					//_state.b.longPressed = 0;
 					_state.b.onClick = 1;
 					readDebounced();
+					
+					if ( _onClickCallback != nullptr) _onClickCallback();
 				}
 				{ 	// условия перехода в  др состояния
 					_stateMachine = PR_RELIASED;
@@ -227,6 +253,8 @@ void	PR_ButtonClass::loop() {
 			case	PR_ON_DBLCLICK: {	// 7 действия в этом состоянии
 					_state.b.onDblClick = 1;
 					readDebounced();
+					
+					if ( _onDblClickCallback != nullptr) _onDblClickCallback();
 				}
 				{ 	// условия перехода в  др состояния
 					_stateMachine = PR_PRESSED;
@@ -277,6 +305,17 @@ bool 	PR_ButtonClass::isOnLongReliased()	{
 	#endif
 	return	val;	
 }
+
+//////////////	Callback functions /////////////////////
+
+void	PR_ButtonClass::setOnClickCallback		( void (*func)(void) ) { _onClickCallback = func;	}
+void	PR_ButtonClass::setOnDblClickCallback	( void (*func)(void) ) { _onDblClickCallback = func;	}
+void	PR_ButtonClass::setOnFallCallback		( void (*func)(void) ) { _onFallCallback = func;	}
+void	PR_ButtonClass::setOnRiseCallback		( void (*func)(void) ) { _onRiseCallback = func;	}
+void	PR_ButtonClass::setOnLongPressedCallback( void (*func)(void) ) { _onLongPressedCallback = func;	}	
+void	PR_ButtonClass::setOnLongReliasedCallback( void (*func)(void) ) { _onLongReliasedCallback = func;	}
+
+//////////////////////////////////////////////////////////
 
 String		PR_ButtonClass::getVerboseState() {
 	String	str;
